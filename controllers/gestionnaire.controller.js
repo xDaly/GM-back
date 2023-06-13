@@ -37,14 +37,26 @@ exports.getGestinnaires = async (req, res) => {
     }
 }
 
-exports.deleteGestionnaire = async (req,res) => {
+exports.deleteGestionnaire = async (req, res) => {
     try {
-       await  userService.deleteGestionnaire(req.params.id)
-       resHandler.setSuccess(200, 'Gestionnaire supprimé avec success')
+        await userService.deleteGestionnaire(req.params.id)
+        resHandler.setSuccess(200, 'Gestionnaire supprimé avec success')
         return resHandler.send(res);
     } catch (error) {
         console.log(error);
         resHandler.setError(400, 'Erreur lors de suppression du data')
+        return resHandler.send(res);
+    }
+}
+
+exports.updateGestionnaire = async (req, res) => {
+    try {
+        await userService.updateGestionnaire(req.body, req.params.id)
+        resHandler.setSuccess(200, 'Gestionnaire modifier avec success')
+        return resHandler.send(res);
+    } catch (error) {
+        console.log(error);
+        resHandler.setError(400, 'Erreur lors de la modification du data')
         return resHandler.send(res);
     }
 }

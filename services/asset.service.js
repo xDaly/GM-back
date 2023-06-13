@@ -1,15 +1,30 @@
+const { Asset } = require('../database')
+const { Ownership } = require('../database')
 const { User } = require('../database')
-const { Profil } = require('../database')
 
 
-
-exports.createUser = async ({ userName, password, role }) => {
+exports.AddAsset = async ({ asset }) => {
     try {
-        return await User.create({
-            userName: userName,
-            password: password,
-            role: role
+        const admin = await User.findOne({
+            where: {
+                role: 'admin'
+            }
         })
+        const NewAsset = await Asset.create({
+            SN: asset.SN,
+            model: asset.model,
+            buy_date: asset.buy_date,
+            current_owner: asset.current_owner,
+            structure: asset.structure,
+            localisation: asset.localisation,
+            etat: asset.etat,
+            observation: asset.observation
+        })
+        await Ownership.create({
+            asset_id: NewAsset.get().id,
+            user_id: admin.dataValues.id
+        })
+        return NewAsset
     } catch (error) {
         return error
     }

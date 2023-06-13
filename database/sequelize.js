@@ -17,6 +17,18 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
     try {
         await sequelize.authenticate();
         sequelize.sync({ alter: true });
+        const [instance, created] = await require("./models/user.model").User.findOrCreate({
+            where: {
+                userName: 'admin',
+                password: 'admin',
+                role: 'admin'
+            },
+            defaults: {
+                userName: 'admin',
+                password: 'admin', 
+                role: 'admin'
+            }
+        });
         console.log("Connection has been established successfully.");
     } catch (error) {
         console.error("Unable to connect to the database:", error);
