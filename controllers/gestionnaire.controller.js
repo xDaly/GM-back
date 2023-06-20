@@ -24,7 +24,6 @@ exports.createGestinnaire = async (req, res) => {
     }
 }
 
-
 exports.getGestinnaires = async (req, res) => {
     try {
         const data = await userService.getGestinnaires()
