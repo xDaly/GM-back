@@ -18,7 +18,7 @@
       data: this.data,
     };
 
-    if (this.type === "success") {
+    if (this.type == "success") {
       return res.status(this.statusCode).json(result);
     }
     return res.status(this.statusCode).json({

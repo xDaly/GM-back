@@ -9,12 +9,6 @@ exports.Ownership = sequelize.define(
       defaultValue: Sequelize.UUIDV4,
       primaryKey: true,
       allowNull: false
-    },
-    asset_id: {
-      type: DataTypes.STRING,
-    },
-    user_id: {
-      type: DataTypes.STRING,
     }
   }
 );  

@@ -18,16 +18,11 @@ exports.createAsset = async (req, res) => {
 
 exports.getAssets = async (req, res) => {
   try {
-    const assets = await assetService.getAssets(
-      req.query.page,
-      req.query.pageSize,
-      req.query.orderBy,
-      req.query.direction
-    );
+    const assets = await assetService.getAssets(req.query, req.body);
     resHandler.setSuccess(200, "materiels", assets);
+    console.log('assets');
     return resHandler.send(res);
   } catch (error) {
-    console.log(error);
     resHandler.setError(400, "Erreur au reception du data du materiels");
     return resHandler.send(res);
   }

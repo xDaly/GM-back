@@ -2,8 +2,9 @@ const { Asset } = require("../database");
 const { Ownership } = require("../database");
 const { User } = require("../database");
 const { paginate } = require("../helpers/paginate.helper");
+const { Op } = require("sequelize");
 
-exports.AddAsset = async ({ asset }) => {
+exports.AddAsset = async (asset) => {
   try {
     const admin = await User.findOne({
       where: {
@@ -21,8 +22,8 @@ exports.AddAsset = async ({ asset }) => {
       observation: asset.observation,
     });
     await Ownership.create({
-      asset_id: NewAsset.get().id,
-      user_id: admin.dataValues.id,
+      AssetId: NewAsset.get().id,
+      UserId: admin.dataValues.id,
     });
     return NewAsset.get();
   } catch (error) {
@@ -30,30 +31,50 @@ exports.AddAsset = async ({ asset }) => {
   }
 };
 
-exports.creteProfil = async ({ UserId, nom, prenom, email }) => {
+exports.getAssets = async (query, filters) => {
   try {
-    return await Profil.create({
-      UserId,
-      nom,
-      prenom,
-      email,
+    const pagination = paginate(
+      query.page,
+      query.pageSize,
+      query.orderBy,
+      query.direction
+    );
+    const assets = await Asset.findAndCountAll({
+      offset: +pagination.offset,
+      limit: +pagination.limit,
+      order: pagination.order,
+      where: {
+        [Op.and]: [
+          {
+            etat: filters.etat
+              ? { [Op.eq]: filters.etat }
+              : { [Op.not]: "declassé" },
+          },
+          {
+            [Op.or]: [
+              { SN: { [Op.substring]: filters.SN || "" } },
+              { model: { [Op.substring]: filters.model || "" } },
+              { buy_date: { [Op.substring]: filters.buy_date || "" } },
+              {
+                current_owner: { [Op.substring]: filters.current_owner || "" },
+              },
+              { structure: { [Op.substring]: filters.structure || "" } },
+              { localisation: { [Op.substring]: filters.localisation || "" } },
+              { observation: { [Op.substring]: filters.observation || "" } },
+            ],
+          },
+        ],
+      },
     });
+    return assets;
   } catch (error) {
-    return error;
-  }
-};
-
-exports.getAssets = async (page, pageSize, orderBy, direction) => {
-  const pagination = paginate(page, pageSize, orderBy, direction);
-  try {
-    return await Asset.findAndCountAll(pagination);
-  } catch (error) {
-    return error;
+    console.err(error);
+    throw error;
   }
 };
 
 exports.deleteGestionnaire = async (id) => {
-  const profil = await Profil.findOne({
+  const profil = await Asset.findOne({
     where: {
       id: id,
     },
@@ -73,7 +94,7 @@ exports.deleteGestionnaire = async (id) => {
 
 exports.updateAsset = async (newData, id) => {
   try {
-    return await Asset.update(
+    await Asset.update(
       {
         ...newData,
       },
@@ -83,6 +104,7 @@ exports.updateAsset = async (newData, id) => {
         },
       }
     );
+    return await Asset.findByPk(id);
   } catch (error) {
     return error;
   }
@@ -90,12 +112,18 @@ exports.updateAsset = async (newData, id) => {
 
 exports.deleteAsset = async (id) => {
   try {
-    await Asset.destroy({
-      where: {
-        id: id,
+    await Asset.update(
+      {
+        etat: "declassé",
       },
-    });
+      {
+        where: {
+          id: id,
+        },
+      }
+    );
+    return await Asset.findByPk(id);
   } catch (error) {
-    console.log(error);
+    return error;
   }
 };

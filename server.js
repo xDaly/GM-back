@@ -9,6 +9,7 @@ app.use(cors({
     origin: '*'
 }))
 app.use(bodyparser.json({ limit: '50000kb' }))
+app.use(bodyparser.urlencoded({limit:'50000kb'}))
 
 
 require('./routes')(app)

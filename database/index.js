@@ -7,6 +7,8 @@ const { Ownership } = require('./models/ownership.model')
 
 
 User.hasOne(Profil, { onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+User.hasMany(Ownership, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+Asset.hasMany(Ownership, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
 Profil.belongsTo(User, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
 
 

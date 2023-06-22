@@ -9,53 +9,63 @@ exports.createUser = async ({ userName, password, role }) => {
       role: role,
     });
   } catch (error) {
-    return error;
+    console.err(error);
+    throw error;
   }
 };
 
 exports.creteProfil = async ({ UserId, nom, prenom, email }) => {
   try {
-    return await Profil.create({
+    const profil = await Profil.create({
       UserId,
       nom,
       prenom,
       email,
     });
+    return profil;
   } catch (error) {
-    return error;
+    console.err(error);
+    throw error;
   }
 };
 
 exports.getGestinnaires = async () => {
   try {
-    return User.findAll({
+    const user = await User.findAll({
       include: [Profil],
       where: {
         role: "gestionnaire",
       },
     });
+    return user;
   } catch (error) {
-    return error;
+    console.err(error);
+    throw error;
   }
 };
 
 exports.deleteGestionnaire = async (id) => {
-  const profil = await Profil.findOne({
-    where: {
-      id: id,
-    },
-  });
+  try {
+    const profil = await Profil.findOne({
+      where: {
+        id: id,
+      },
+    });
 
-  await User.destroy({
-    where: {
-      id: profil.dataValues.UserId,
-    },
-  });
-  // await Profil.destroy({
-  //     where: {
-  //         id: id
-  //     }
-  // })
+    await User.destroy({
+      where: {
+        id: profil.dataValues.UserId,
+      },
+    });
+    // await Profil.destroy({
+    //     where: {
+    //         id: id
+    //     }
+    // })
+  } catch (error) {
+    console.err(error);
+    throw error;
+  }
 };
 
 exports.updateGestionnaire = async (newData, id) => {
@@ -88,7 +98,14 @@ exports.updateGestionnaire = async (newData, id) => {
         },
       }
     );
+    return await User.findAll({
+      include: [Profil],
+      where: {
+        role: "gestionnaire",
+      },
+    });
   } catch (error) {
-    console.log(error);
+    console.err(error);
+    throw error;
   }
 };
