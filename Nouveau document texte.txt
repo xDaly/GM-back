@@ -1,0 +1,55 @@
+gestion materiel 
+validators password :
+min length 
+minuscule 
+majuscule 
+chiffre 
+charactere spec
+separated messages 
+validators email : 
+email must have @ and point with universal structure 
+sidebar with icons and hover 
+drawer push page 
+
+
+
+
+=====================
+
+historique materiel 
+current owner 
+
+ownership 
+userid employid assetid userid houwa li 3mal elupdate heki 
+===================
+gestionnaire historique
+affectation materiel 
+update materiel  materiel 
+====================
+
+
+materiel on delete = declassé
+gestionnaire on delete = archivé
+employer on delete = archivé
+
+=====
+historique affectation 
+historique update materiel
+
+======
+
+
+update materiel fields 
+currect owner 
+structure 
+localisation 
+etat 
+
+
+
+
+
+
+
+
+

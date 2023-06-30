@@ -1,31 +1,24 @@
 const { Asset } = require("../database");
-const { Ownership } = require("../database");
+const { Employe } = require("../database");
 const { User } = require("../database");
 const { paginate } = require("../helpers/paginate.helper");
 const { Op } = require("sequelize");
 
-exports.AddAsset = async (asset) => {
+exports.AddEmploye = async (employe) => {
   try {
-    const admin = await User.findOne({
-      where: {
-        role: "admin",
-      },
+    const NewEmploye = await Employe.create({
+      nom: employe.nom,
+      prenom: employe.prenom,
+      cin: employe.cin,
+      structure: employe.structure,
+      etage: employe.etage,
+      bureau: employe.bureau,
+      poste: employe.poste,
+      region: employe.region,
+      localisation: employe.localisation,
+      archived: false
     });
-    const NewAsset = await Asset.create({
-      SN: asset.SN,
-      model: asset.model,
-      buy_date: asset.buy_date,
-      current_owner: asset.current_owner,
-      structure: asset.structure,
-      localisation: asset.localisation,
-      etat: asset.etat,
-      observation: asset.observation,
-    });
-    await Ownership.create({
-      AssetId: NewAsset.get().id,
-      UserId: admin.dataValues.id,
-    });
-    return NewAsset.get();
+    return NewEmploye.get();
   } catch (error) {
     console.err(error);
     throw error;
@@ -40,34 +33,34 @@ exports.getAssets = async (query, filters) => {
       query.orderBy,
       query.direction
     );
-    const assets = await Asset.findAndCountAll({
+    const employes = await Employe.findAndCountAll({
       offset: +pagination.offset,
       limit: +pagination.limit,
       order: pagination.order,
       where: {
         [Op.and]: [
           {
-            etat: filters.etat
-              ? { [Op.eq]: filters.etat }
-              : { [Op.not]: "declassé" },
+            archived: filters.archived
+              ? { [Op.eq]: filters.archived }
+              : { [Op.not]: false },
           },
           {
             [Op.or]: [
-              { SN: { [Op.substring]: filters.SN || "" } },
-              { model: { [Op.substring]: filters.model || "" } },
-              { buy_date: { [Op.substring]: filters.buy_date || "" } },
-              {
-                current_owner: { [Op.substring]: filters.current_owner || "" },
-              },
+              { nom: { [Op.substring]: filters.nom || "" } },
+              { prenom: { [Op.substring]: filters.prenom || "" } },
+              { cin: { [Op.substring]: filters.cin || "" } },
               { structure: { [Op.substring]: filters.structure || "" } },
+              { etage: { [Op.substring]: filters.etage || "" } },
+              { bureau: { [Op.substring]: filters.bureau || "" } },
+              { poste: { [Op.substring]: filters.poste || "" } },
+              { region: { [Op.substring]: filters.region || "" } },
               { localisation: { [Op.substring]: filters.localisation || "" } },
-              { observation: { [Op.substring]: filters.observation || "" } },
             ],
           },
         ],
       },
     });
-    return assets;
+    return employes;
   } catch (error) {
     console.err(error);
     throw error;
@@ -128,3 +121,6 @@ exports.deleteAsset = async (id) => {
     return error;
   }
 };
+
+
+

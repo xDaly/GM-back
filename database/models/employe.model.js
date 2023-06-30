@@ -38,5 +38,8 @@ exports.Employe = sequelize.define(
     localisation: {
       type: DataTypes.STRING,
     },
+    archived: {
+      type: DataTypes.BOOLEAN,
+    },
   }
 );
