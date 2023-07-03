@@ -1,4 +1,4 @@
-const { Asset } = require("../database");
+const { Asset, History } = require("../database");
 const { Ownership } = require("../database");
 const { User } = require("../database");
 const { paginate } = require("../helpers/paginate.helper");
@@ -93,9 +93,9 @@ exports.deleteGestionnaire = async (id) => {
   // })
 };
 
-exports.updateAsset = async (newData, id) => {
+exports.updateAsset = async (newData, id, profil) => {
   try {
-    await Asset.update(
+    const [, Update] = await Asset.update(
       {
         ...newData,
       },
@@ -103,8 +103,11 @@ exports.updateAsset = async (newData, id) => {
         where: {
           id: id,
         },
+        individualHooks: true,
       }
     );
+    const changes = Array.from(Update[0]._changed);
+    addHistory(changes, Update, profil.nom + " " + profil.prenom);
     return await Asset.findByPk(id);
   } catch (error) {
     return error;
@@ -126,5 +129,35 @@ exports.deleteAsset = async (id) => {
     return await Asset.findByPk(id);
   } catch (error) {
     return error;
+  }
+};
+
+const addHistory = async (data, Update, gestionnaire) => {
+  try {
+    console.log(Update[0].dataValues.updatedAt);
+    await data.map(async (e) => {
+      if (e != "updatedAt" && e != "current_owner") {
+        await History.create({
+          gestionnaire: gestionnaire,
+          update: e,
+          from: Update[0]._previousDataValues[e],
+          to: Update[0].dataValues[e],
+          date: Update[0].dataValues.updatedAt,
+          AssetId: Update[0].dataValues.id,
+        });
+      }
+      if (e == "current_owner") {
+        await History.create({
+          gestionnaire: gestionnaire,
+          update: "Affectation",
+          from: Update[0]._previousDataValues[e],
+          to: Update[0].dataValues[e],
+          date: Update[0].dataValues.updatedAt,
+          AssetId: Update[0].dataValues.id,
+        });
+      }
+    });
+  } catch (error) {
+    console.log("eeeeee", error);
   }
 };

@@ -47,7 +47,6 @@ exports.getProfil = async (id) => {
 exports.checkToken = async (token) => {
   try {
     var decoded = jwt.verify(token, JWTSECRET);
-    console.log(decoded);
     return decoded
   } catch (error) {
     console.error(error);

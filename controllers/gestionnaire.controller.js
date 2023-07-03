@@ -9,7 +9,7 @@ exports.createGestinnaire = async (req, res) => {
             password: req.body.password,
             role: 'gestionnaire'
         })
-        const newProfil = await userService.creteProfil({
+        const newProfil = await userService.createProfil({
             UserId: newGestionnaire.id,
             nom: req.body.nom,
             prenom: req.body.prenom,

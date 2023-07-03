@@ -99,7 +99,6 @@ exports.updateGestionnaire = async (newData, id) => {
         individualHooks:true
       }
     );
-    console.log(Array.from(Update[0]._changed));
     return await User.findAll({
       include: [Profil],
       where: {

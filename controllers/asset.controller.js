@@ -32,7 +32,8 @@ exports.editAsset = async (req, res) => {
   try {
     const newAssetData = await assetService.updateAsset(
       req.body,
-      req.params.id
+      req.params.id,
+      req.profil
     );
     resHandler.setSuccess(
       200,
