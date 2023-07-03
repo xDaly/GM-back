@@ -20,7 +20,7 @@ exports.AddEmploye = async (employe) => {
     });
     return NewEmploye.get();
   } catch (error) {
-    console.err(error);
+    console.error(error);
     throw error;
   }
 };
@@ -62,7 +62,7 @@ exports.getAssets = async (query, filters) => {
     });
     return employes;
   } catch (error) {
-    console.err(error);
+    console.error(error);
     throw error;
   }
 };

@@ -27,7 +27,7 @@ exports.AddAsset = async (asset) => {
     });
     return NewAsset.get();
   } catch (error) {
-    console.err(error);
+    console.error(error);
     throw error;
   }
 };
@@ -69,7 +69,7 @@ exports.getAssets = async (query, filters) => {
     });
     return assets;
   } catch (error) {
-    console.err(error);
+    console.error(error);
     throw error;
   }
 };

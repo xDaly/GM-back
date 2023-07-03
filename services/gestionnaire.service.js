@@ -9,12 +9,12 @@ exports.createUser = async ({ userName, password, role }) => {
       role: role,
     });
   } catch (error) {
-    console.err(error);
+    console.error(error);
     throw error;
   }
 };
 
-exports.creteProfil = async ({ UserId, nom, prenom, email }) => {
+exports.createProfil = async ({ UserId, nom, prenom, email }) => {
   try {
     const profil = await Profil.create({
       UserId,
@@ -24,7 +24,7 @@ exports.creteProfil = async ({ UserId, nom, prenom, email }) => {
     });
     return profil;
   } catch (error) {
-    console.err(error);
+    console.error(error);
     throw error;
   }
 };
@@ -39,7 +39,7 @@ exports.getGestinnaires = async () => {
     });
     return user;
   } catch (error) {
-    console.err(error);
+    console.error(error);
     throw error;
   }
 };
@@ -63,7 +63,7 @@ exports.deleteGestionnaire = async (id) => {
     //     }
     // })
   } catch (error) {
-    console.err(error);
+    console.error(error);
     throw error;
   }
 };
@@ -83,10 +83,10 @@ exports.updateGestionnaire = async (newData, id) => {
       {
         where: {
           id: profil.dataValues.UserId,
-        },
+        }
       }
     );
-    await Profil.update(
+    const [,Update] = await Profil.update(
       {
         nom: newData.nom,
         prenom: newData.prenom,
@@ -96,8 +96,10 @@ exports.updateGestionnaire = async (newData, id) => {
         where: {
           id: id,
         },
+        individualHooks:true
       }
     );
+    console.log(Array.from(Update[0]._changed));
     return await User.findAll({
       include: [Profil],
       where: {
@@ -105,7 +107,7 @@ exports.updateGestionnaire = async (newData, id) => {
       },
     });
   } catch (error) {
-    console.err(error);
+    console.error(error);
     throw error;
   }
 };

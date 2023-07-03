@@ -3,7 +3,6 @@ const dbConfig = require("../config/db.config");
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   host: dbConfig.HOST,
   dialect: dbConfig.dialect,
-
   pool: {
     max: dbConfig.pool.max,
     min: dbConfig.pool.min,
@@ -26,7 +25,22 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
         defaults: {
           userName: "admin",
           password: "admin",
-          role: "admin", 
+          role: "admin",
+        },
+      });
+    const [instanceProfil, createdProfile] =
+      await require("./models/profil.model").Profil.findOrCreate({
+        where: {
+          nom: "mondher",
+          prenom: "jardak",
+          email: "mondher.jardak@gmail.com",
+          UserId: instance.dataValues.id
+        },
+        defaults: {
+          nom: "mondher",
+          prenom: "jardak",
+          email: "mondher.jardak@gmail.com",
+          UserId: instance.dataValues.id
         },
       });
     console.log("Connection has been established successfully.");
