@@ -14,6 +14,7 @@ exports.checkUser = async (userName, password) => {
     if (!user) {
       throw "utilisateur introuvable";
     }
+    console.log(user.dataValues.password == password);
     if (user.dataValues.password == password) {
       delete user.dataValues.createdAt;
       delete user.dataValues.updatedAt;
@@ -35,7 +36,7 @@ exports.getProfil = async (id) => {
         UserId: id,
       },
     });
-    return profil.dataValues;
+    return profil.get();
   } catch (error) {
     console.error(error);
     throw error;
@@ -53,7 +54,7 @@ exports.checkToken = async (token) => {
 };
 
 exports.CreateToken = async (id) => {
-  token = jwt.sign({ id: id }, JWTSECRET, { expiresIn: "10s" });
+  token = jwt.sign({ id: id }, JWTSECRET, { expiresIn: "100h" });
   return token;
 };
 

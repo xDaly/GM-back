@@ -14,11 +14,8 @@ exports.Employe = sequelize.define(
     nom: {
       type: DataTypes.STRING,
     },
-    prenom: {
-      type: DataTypes.STRING,
-    },
     cin: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.BIGINT,
     },
     structure: {
       type: DataTypes.STRING,

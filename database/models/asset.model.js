@@ -17,18 +17,10 @@ exports.Asset = sequelize.define("Asset", {
   buy_date: {
     type: DataTypes.STRING,
   },
-  current_owner: {
-    type: DataTypes.STRING,
-  },
-  structure: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  localisation: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
   etat: {
+    type: DataTypes.STRING,
+  },
+  type: {
     type: DataTypes.STRING,
   },
   observation: {

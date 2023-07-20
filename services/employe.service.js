@@ -8,7 +8,6 @@ exports.AddEmploye = async (employe) => {
   try {
     const NewEmploye = await Employe.create({
       nom: employe.nom,
-      prenom: employe.prenom,
       cin: employe.cin,
       structure: employe.structure,
       etage: employe.etage,
@@ -25,11 +24,11 @@ exports.AddEmploye = async (employe) => {
   }
 };
 
-exports.getAssets = async (query, filters) => {
+exports.getEmployes = async (query, filters) => {
   try {
     const pagination = paginate(
       query.page,
-      query.pageSize,
+      query.size,
       query.orderBy,
       query.direction
     );
@@ -40,21 +39,16 @@ exports.getAssets = async (query, filters) => {
       where: {
         [Op.and]: [
           {
-            archived: filters.archived
-              ? { [Op.eq]: filters.archived }
-              : { [Op.not]: false },
+            archived: { [Op.eq]: filters.archived }
           },
           {
-            [Op.or]: [
-              { nom: { [Op.substring]: filters.nom || "" } },
-              { prenom: { [Op.substring]: filters.prenom || "" } },
-              { cin: { [Op.substring]: filters.cin || "" } },
-              { structure: { [Op.substring]: filters.structure || "" } },
-              { etage: { [Op.substring]: filters.etage || "" } },
-              { bureau: { [Op.substring]: filters.bureau || "" } },
-              { poste: { [Op.substring]: filters.poste || "" } },
-              { region: { [Op.substring]: filters.region || "" } },
-              { localisation: { [Op.substring]: filters.localisation || "" } },
+            [Op.and]: [
+              { nom: { [Op.substring]: filters.nom } },
+              { cin: { [Op.substring]: filters.cin } },
+              { structure: { [Op.substring]: filters.structure } },
+              { etage: { [Op.substring]: filters.etage } },
+              { region: { [Op.substring]: filters.region } },
+              { localisation: { [Op.substring]: filters.localisation } },
             ],
           },
         ],
@@ -67,28 +61,27 @@ exports.getAssets = async (query, filters) => {
   }
 };
 
-exports.deleteGestionnaire = async (id) => {
-  const profil = await Asset.findOne({
-    where: {
-      id: id,
-    },
-  });
+exports.getEmployesForAffectation = async () => {
+  try {
 
-  await User.destroy({
-    where: {
-      id: profil.dataValues.UserId,
-    },
-  });
-  // await Profil.destroy({
-  //     where: {
-  //         id: id
-  //     }
-  // })
+    const employes = await Employe.findAll({
+      attributes: ['id', 'nom'],
+      where : {
+        archived : false
+      }
+    })
+    return employes;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };
 
-exports.updateAsset = async (newData, id) => {
+
+
+exports.updateEmploye = async (newData, id) => {
   try {
-    await Asset.update(
+    await Employe.update(
       {
         ...newData,
       },
@@ -98,27 +91,21 @@ exports.updateAsset = async (newData, id) => {
         },
       }
     );
-    return await Asset.findByPk(id);
+    return await Employe.findByPk(id);
   } catch (error) {
-    return error;
+    console.error(error);
+    throw error;
   }
 };
 
-exports.deleteAsset = async (id) => {
+exports.getEmployeByIdWithAssets = async (id) => {
   try {
-    await Asset.update(
-      {
-        etat: "declassé",
-      },
-      {
-        where: {
-          id: id,
-        },
-      }
-    );
-    return await Asset.findByPk(id);
+  return  await Employe.findByPk(id,{
+      include:[Asset]
+    })
   } catch (error) {
-    return error;
+    console.error(error);
+    throw error;
   }
 };
 

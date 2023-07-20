@@ -36,6 +36,30 @@ exports.getGestinnaires = async (req, res) => {
     }
 }
 
+exports.getGestinnairesNames = async (req, res) => {
+    try {
+        const data = await userService.getGestinnairesNames()
+        resHandler.setSuccess(200, 'Data récupéré avec success', data)
+        return resHandler.send(res);
+    } catch (error) {
+        console.log(error);
+        resHandler.setError(400, 'Erreur lors de recupération du data')
+        return resHandler.send(res);
+    }
+}
+
+exports.getArchivedGestinnaires = async (req, res) => {
+    try {
+        const data = await userService.getArchivedGestinnaires()
+        resHandler.setSuccess(200, 'Data récupéré avec success', data)
+        return resHandler.send(res);
+    } catch (error) {
+        console.log(error);
+        resHandler.setError(400, 'Erreur lors de recupération du data')
+        return resHandler.send(res);
+    }
+}
+
 exports.deleteGestionnaire = async (req, res) => {
     try {
         await userService.deleteGestionnaire(req.params.id)

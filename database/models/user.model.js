@@ -18,6 +18,9 @@ exports.User = sequelize.define(
     },
     role : {
       type : DataTypes.STRING
+    },
+    archived : {
+      type : DataTypes.BOOLEAN
     }
   }
 );  

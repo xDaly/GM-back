@@ -6,6 +6,7 @@ exports.createUser = async ({ userName, password, role }) => {
     return await User.create({
       userName: userName,
       password: password,
+      archived: false,
       role: role,
     });
   } catch (error) {
@@ -35,6 +36,39 @@ exports.getGestinnaires = async () => {
       include: [Profil],
       where: {
         role: "gestionnaire",
+        archived: false
+      },
+    });
+    return user;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+exports.getGestinnairesNames = async () => {
+  try {
+    const user = await User.findAll({
+      attributes: ['userName'],
+      where: {
+        role: "gestionnaire",
+        archived: false
+      },
+    });
+    return user;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+exports.getArchivedGestinnaires = async () => {
+  try {
+    const user = await User.findAll({
+      include: [Profil],
+      where: {
+        role: "gestionnaire",
+        archived: true
       },
     });
     return user;
@@ -77,8 +111,7 @@ exports.updateGestionnaire = async (newData, id) => {
     });
     await User.update(
       {
-        userName: newData.userName,
-        password: newData.password,
+        ...newData
       },
       {
         where: {
@@ -86,7 +119,7 @@ exports.updateGestionnaire = async (newData, id) => {
         }
       }
     );
-    const [,Update] = await Profil.update(
+    const [, Update] = await Profil.update(
       {
         nom: newData.nom,
         prenom: newData.prenom,
@@ -96,7 +129,7 @@ exports.updateGestionnaire = async (newData, id) => {
         where: {
           id: id,
         },
-        individualHooks:true
+        individualHooks: true
       }
     );
     return await User.findAll({

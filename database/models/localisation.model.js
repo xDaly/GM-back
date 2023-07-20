@@ -1,8 +1,8 @@
 const { sequelize } = require("../sequelize");
 const { DataTypes, Sequelize } = require("sequelize");
 
-exports.Ownership = sequelize.define(
-  "Ownership",
+exports.Localisation = sequelize.define(
+  "Localisation",
   {
     id: {
       type: DataTypes.UUID,
@@ -10,15 +10,8 @@ exports.Ownership = sequelize.define(
       primaryKey: true,
       allowNull: false
     },
-    gestionnaire: {
-      type: DataTypes.STRING
-    },
-    from: {
-      type: DataTypes.STRING
-    },
-    to: {
+    name: {
       type: DataTypes.STRING
     }
   }
 );  
-

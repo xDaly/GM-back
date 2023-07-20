@@ -5,6 +5,7 @@ exports.checkToken = async (req, res, next) => {
   try {
     const decoded = await authService.checkToken(req.headers["authorization"]);
       const profil = await authService.getProfil(decoded.id);
+      console.log(profil);
       req.profil = profil;
       return next();
   } catch (error) {
