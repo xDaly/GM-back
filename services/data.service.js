@@ -55,6 +55,25 @@ exports.getCounts = async () => {
         etat: "declassé"
       }
     })
+
+    const stockAssets = await Asset.count({
+      where: {
+        etat: "en stock"
+      }
+    })
+    
+    const inUseAssets = await Asset.count({
+      where: {
+        etat: "en utilisation"
+      }
+    })
+
+    const brokenAssets = await Asset.count({
+      where: {
+        etat: "en panne"
+      }
+    })
+
     const users = await User.count({
       where: {
         archived: false
@@ -75,6 +94,17 @@ exports.getCounts = async () => {
      const assetsData = await Asset.count({
       group: 'etat'
     })
+    const assetsLocalisationData = await Asset.count({
+       include: [Employe],
+      group: ['Employe.localisation']
+    })
+    const assetsRegionData = await Asset.count({
+      include: [Employe],
+      group: ['Employe.region']
+    })
+    const assetsTypeData = await Asset.count({
+      group: ['type']
+    })
     // const usersData = await User.findAll({
     //   group: 'archived'
 
@@ -82,14 +112,20 @@ exports.getCounts = async () => {
 
     return {
       employes,
+      stockAssets,
       archivedEmployes,
+      brokenAssets,
       assets,
+      inUseAssets,
       declassedAssets,
       users,
       archivedusers,
       regionData,
       localisationUsersData,
-      assetsData
+      assetsData,
+      assetsLocalisationData,
+      assetsRegionData,
+      assetsTypeData
     }
   } catch (error) {
     console.error(error);
