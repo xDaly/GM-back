@@ -52,7 +52,7 @@ exports.editAsset = async (req, res) => {
 
 exports.deleteAsset = async (req, res) => {
   try {
-    await assetService.deleteAsset(req.params.id);
+    await assetService.deleteAsset(req.params.id,req.profil);
     resHandler.setSuccess(200, "Materiel a été supprimer avec succes", {});
     return resHandler.send(res);
   } catch (error) {

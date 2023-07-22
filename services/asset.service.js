@@ -113,9 +113,9 @@ exports.updateAsset = async (newData, id, profil) => {
 
 
 
-exports.deleteAsset = async (id) => {
+exports.deleteAsset = async (id,profil) => {
   try {
-    await Asset.update(
+    const [, Update] =   await Asset.update(
       {
         etat: "declassé",
       },
@@ -123,8 +123,11 @@ exports.deleteAsset = async (id) => {
         where: {
           id: id,
         },
+        individualHooks: true,
       }
     );
+    const changes = Array.from(Update[0]._changed);
+    addHistory(changes, Update, profil.nom + " " + profil.prenom);
     return await Asset.findByPk(id);
   } catch (error) {
     return error;
@@ -156,6 +159,7 @@ exports.getHistory = async (id) => {
 }
 
 const addHistory = async (data, Update, gestionnaire) => {
+  console.log('add history');
   try {
     await data.map(async (e) => {
       if (e != "updatedAt" && e != "EmployeId") {

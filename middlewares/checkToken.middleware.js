@@ -3,6 +3,7 @@ const resHandler = require("../helpers/responseHandler.helper");
 
 exports.checkToken = async (req, res, next) => {
   try {
+    console.log(req.originalUrl);
     const decoded = await authService.checkToken(req.headers["authorization"]);
       const profil = await authService.getProfil(decoded.id);
       console.log(profil);
